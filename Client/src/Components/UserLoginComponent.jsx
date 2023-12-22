@@ -26,7 +26,6 @@ const UserLoginForm = () => {
 
     try {
       const response = await userLogin({ userEmail, userPassword }).unwrap();
-      console.log(response.name,"ress")
       dispatch(setUserCredentials({ ...response }));
       navigate("/userHome");
     } catch (error) {
