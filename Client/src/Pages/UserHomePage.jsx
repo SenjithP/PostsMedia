@@ -6,29 +6,70 @@ import {
   useCreatePostsMutation,
   useViewPostsMutation,
 } from "../Slices/postApiSlice.js";
-import { useSelector } from "react-redux";
-import AllPostComponent from "../Components/postComponent.jsx";
+import { useDispatch, useSelector } from "react-redux";
+import PostComponent from "../Components/PostComponent.jsx";
+import no_post_found from "../assets/Images/no_post_found.jpg";
+import { useUserLogoutMutation } from "../Slices/authenticationApiSlice.js";
+import { useNavigate } from "react-router-dom";
+import { userLogout } from "../Slices/authenticationSlice.js";
 
 const UserHomePage = () => {
   const { userInfo } = useSelector((state) => state.authentication);
   const [count, setCount] = useState(0);
   const [allPosts, setAllPosts] = useState([]);
   const [viewPosts] = useViewPostsMutation();
+  const [receivedData, setReceivedData] = useState(null);
+  const [searchQuery, setSearchQuery] = useState("");
+  const [userLogoutApiCall] = useUserLogoutMutation();
 
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+
+  const logoutHandler = async () => {
+    try {
+      if (userInfo) {
+        await userLogoutApiCall().unwrap();
+        dispatch(userLogout());
+        toast.success("Logout Successful");
+        navigate("/userLogin");
+      }
+    } catch (error) {
+      toast.error(error.data.message);
+      console.log(error);
+    }
+  };
+
+  const handleDataFromChild = (count) => {
+    console.log("Data received from child:", count);
+    setReceivedData(count);
+  };
   useEffect(() => {
     const fetchData = async () => {
       try {
         const result = await viewPosts();
         if (result.data) {
-          setAllPosts(result.data.allPosts);
+          let filteredPosts = result.data.allPosts;
+
+          if (searchQuery) {
+            const lowercaseSearchQuery = searchQuery.toLowerCase();
+            filteredPosts = filteredPosts.filter((post) =>
+              post.contentText.toLowerCase().includes(lowercaseSearchQuery)
+            );
+          }
+
+          setAllPosts(filteredPosts);
         }
       } catch (error) {
         console.error("Error fetching posts:", error);
-      }
+      } 
     };
 
     fetchData();
-  }, [count, viewPosts]);
+  }, [count, viewPosts, receivedData, searchQuery]);
+
+  const handleInputChanges = (e) => {
+    setSearchQuery(e.target.value);
+  };
 
   const [formData, setFormData] = useState({
     contentText: "",
@@ -69,19 +110,48 @@ const UserHomePage = () => {
                 alt=""
               />
               <div className="ml-4">
-                <h4 className="text-lg font-bold">SenjithP</h4>
-                <h5 className="text-sm text-gray-500">senjith@gmail.com</h5>
+                <h4 className="text-lg font-bold">{userInfo?.name}</h4>
+                <h5 className="text-sm text-gray-500">{userInfo?.email}</h5>
               </div>
             </div>
           </div>
           <hr className="m-4 border-t-2 border-blue-400" />
+          <label htmlFor="searchInput">Search Your Favorite</label>
+          <input
+            type="text"
+            value={searchQuery}
+            onChange={handleInputChanges}
+            className="w-full p-2 mb-4 border border-gray-300 rounded-md focus:outline-none"
+            placeholder="Search Posts"
+            id="searchInput"
+          />
+
+          <button
+            onClick={() => {
+              logoutHandler();
+            }}
+            className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-full transition duration-300"
+          >
+            Logout
+          </button>
         </div>
 
         <div className="md:w-1/10 lg:w-1/2 text-center m-5 h-screen overflow-x-hidden overflow-y-auto scrollbar-thin scrollbar-thumb-white-300">
-          {allPosts.length > 0 ? (
-            <AllPostComponent allPosts={allPosts} />
+        {
+          allPosts.length > 0 ? (
+            <PostComponent
+              allPosts={allPosts}
+              onDataFromChild={handleDataFromChild}
+            />
           ) : (
-            <div>No Post found</div>
+            <div className="flex items-center justify-center h-screen">
+              <div className="bg-gray-100 p-8 rounded-lg shadow-md">
+                <img src={no_post_found} alt="no post" />
+                <p className="pt-8 text-2xl font-semibold text-gray-800 mb-4">
+                  No Posts found
+                </p>
+              </div>
+            </div>
           )}
         </div>
 

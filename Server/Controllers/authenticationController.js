@@ -103,3 +103,16 @@ export const login = async (req, res) => {
     res.status(error.statusCode || 500).json({ error: error.message });
   }
 };
+
+export const userLogout = async (req, res) => {
+  try {
+    res.cookie("userjwt", "", {
+      httpOnly: true,
+      expires: new Date(0),
+    });
+    res.status(200).json({ message: "Logout successful" });
+  } catch (error) {
+    console.error(error);
+    res.status(error.statusCode || 500).json({ error: error.message });
+  }
+};
