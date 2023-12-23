@@ -13,6 +13,7 @@
 **Technology Stack:**
 
 - **MERN:** MongoDB, Express.js, React.js, Node.js
+- **HOSTING:** Amazon Web Services AWS
 
 **Project Setup:**
 
