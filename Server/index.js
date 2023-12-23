@@ -26,7 +26,7 @@ app.use("/api/home",homeRouter)
 
 const enviornment = "production"
 
-if (enviornment === 'production') {
+if (enviornment === 'production') { 
     const __dirname = path.resolve();
     app.use(express.static(path.join(parentDir, '/Client/dist')));
   

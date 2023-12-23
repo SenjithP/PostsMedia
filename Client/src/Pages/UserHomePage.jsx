@@ -43,6 +43,7 @@ const UserHomePage = () => {
     console.log("Data received from child:", count);
     setReceivedData(count);
   };
+
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -98,10 +99,11 @@ const UserHomePage = () => {
       }
     }
   };
+
   return (
     <>
       <section className="flex flex-col md:flex-row ">
-        <div className="hidden lg:block h-screen lg:w-1/4 rounded-lg  bg-slate-100 m-5 md:shadow-md text-center">
+        <div className="lg:w-1/4 md:w-full bg-slate-100 m-5 md:shadow-md text-center">
           <div className="flex m-5 flex-col  items-center justify-center">
             <div className="flex items-center">
               <img
@@ -136,7 +138,7 @@ const UserHomePage = () => {
           </button>
         </div>
 
-        <div className="md:w-1/10 lg:w-1/2 text-center m-5 h-screen overflow-x-hidden overflow-y-auto scrollbar-thin scrollbar-thumb-white-300">
+        <div className="md:w-1/2 text-center m-5 h-screen overflow-x-hidden overflow-y-auto scrollbar-thin scrollbar-thumb-white-300">
         {
           allPosts.length > 0 ? (
             <PostComponent
@@ -155,7 +157,7 @@ const UserHomePage = () => {
           )}
         </div>
 
-        <div className="hidden lg:block h-screen lg:w-1/4 rounded-lg  bg-slate-200 m-5 md:shadow-md text-center">
+        <div className="lg:w-1/4 md:w-full bg-slate-200 m-5 md:shadow-md text-center">
           <div className="flex flex-col items-center justify-center">
             <img className=" mb-6" src={write_side_image} alt="" />
             <form onSubmit={submitHandler}>

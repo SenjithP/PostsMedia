@@ -134,7 +134,7 @@ const PostComponent = ({ allPosts, onDataFromChild }) => {
             </div>
             <div className="flex flex-col">
               <h2 className="text-xl font-bold mt-1">
-                {posts.userId.userName}
+                {posts?.userId?.userName}
               </h2>
               <h5 className="text-sm text-gray-500">
                 {format(posts.createdAt)}
