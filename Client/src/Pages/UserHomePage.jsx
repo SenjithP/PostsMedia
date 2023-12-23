@@ -7,7 +7,7 @@ import {
   useViewPostsMutation,
 } from "../Slices/postApiSlice.js";
 import { useDispatch, useSelector } from "react-redux";
-import PostComponent from "../Components/PostComponent.jsx";
+import PostComponent from "../Components/postComponent.jsx";
 import no_post_found from "../assets/Images/no_post_found.jpg";
 import { useUserLogoutMutation } from "../Slices/authenticationApiSlice.js";
 import { useNavigate } from "react-router-dom";
